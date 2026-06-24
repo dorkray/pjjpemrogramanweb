@@ -3,11 +3,18 @@ const express = require("express");
 const path = require("path");
 const router = require("./routes/api");
 const errorHandler = require("./middleware/errorHandler");
+const cors = require('cors');
 
 const app = express();
+app.use(cors());
 
 // Parsing JSON dan URL-encoded
 app.use(express.json());
+app.use((req, res, next) => {
+    console.log(`Ada request masuk: ${req.method} ${req.url}`);
+    console.log("Body:", req.body);
+    next();
+});
 app.use(express.urlencoded({ extended: true }));
 
 // Sajikan file statis frontend

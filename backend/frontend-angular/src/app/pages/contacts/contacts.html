@@ -1,0 +1,93 @@
+<div class="container-fluid px-4">
+    <h1 class="mt-4">Contacts</h1>
+    <ol class="breadcrumb mb-4">
+        <li class="breadcrumb-item"><a routerLink="/dashboard">Dashboard</a></li>
+        <li class="breadcrumb-item active">Data Contacts</li>
+    </ol>
+
+    @if (isLoading) {
+        <div class="d-flex justify-content-center" style="height: 200px;"><div class="spinner-border text-primary"></div></div>
+    } @else if (errorMessage) {
+        <div class="alert alert-danger">{{ errorMessage }}</div>
+    } @else {
+        <div class="card mb-4 shadow-sm">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <div><i class="fas fa-bullseye me-1"></i> Daftar Contacts</div>
+                <button class="btn btn-sm btn-success" data-bs-toggle="modal" data-bs-target="#addContactModal">
+                    <i class="fas fa-plus"></i> Tambah Contact
+                </button>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-striped table-bordered table-hover align-middle">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>ID</th>
+                                <th>Customer ID</th>
+                                <th>Nama</th>
+                                <th>Email</th>
+                                <th>Phone</th>
+                                <th>Position</th>
+                                <th class="text-center">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @for (item of contacts; track item.id) {
+                                <tr>
+                                    <td>#{{ item.id }}</td>
+                                    <td>{{ item.name }}<br><span class="badge bg-info text-dark">{{ item.position }}</span></td>
+                                    <td>{{ item.email }}<br><small>{{ item.phone }}</small></td>
+                                    <td>Cust ID: {{ item.customer_id }}</td>
+                                    <td class="text-center">
+                                        <button class="btn btn-sm btn-primary me-2" (click)="openEditModal(item)"><i class="fas fa-edit"></i></button>
+                                        <button class="btn btn-sm btn-danger" (click)="deleteContact(item.id, item.name)"><i class="fas fa-trash"></i></button>
+                                    </td>
+                                </tr>
+                            } @empty {
+                                <tr><td colspan="5" class="text-center py-4">Data kosong.</td></tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+<div class="modal fade" id="addContactModal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header"><h5 class="modal-title">Tambah Contact</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+      <div class="modal-body">
+        <div class="mb-3"><label>ID Customer Terkait</label><input type="number" class="form-control" [(ngModel)]="newContact.customer_id"></div>
+        <div class="mb-3"><label>Nama Kontak</label><input type="text" class="form-control" [(ngModel)]="newContact.name"></div>
+        <div class="mb-3"><label>Email</label><input type="email" class="form-control" [(ngModel)]="newContact.email"></div>
+        <div class="mb-3"><label>Telepon</label><input type="text" class="form-control" [(ngModel)]="newContact.phone"></div>
+        <div class="mb-3"><label>Posisi / Jabatan</label><input type="text" class="form-control" [(ngModel)]="newContact.position"></div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+        <button class="btn btn-primary" (click)="saveContact()" [disabled]="isSaving">Simpan</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="editContactModal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header"><h5 class="modal-title">Edit Contact</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+      <div class="modal-body">
+        <div class="mb-3"><label>ID Customer Terkait</label><input type="number" class="form-control" [(ngModel)]="newContact.customer_id"></div>
+        <div class="mb-3"><label>Nama Kontak</label><input type="text" class="form-control" [(ngModel)]="newContact.name"></div>
+        <div class="mb-3"><label>Email</label><input type="email" class="form-control" [(ngModel)]="newContact.email"></div>
+        <div class="mb-3"><label>Telepon</label><input type="text" class="form-control" [(ngModel)]="newContact.phone"></div>
+        <div class="mb-3"><label>Posisi / Jabatan</label><input type="text" class="form-control" [(ngModel)]="newContact.position"></div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+        <button class="btn btn-primary" (click)="saveEditContact()" [disabled]="isUpdating">Update</button>
+      </div>
+    </div>
+  </div>
+</div>

@@ -15,55 +15,55 @@ const contactsController = require("../controllers/contactsController");
 const activitiesController = require("../controllers/activitiesController");
 
 // ==========================================
-// RUTE PUBLIK (Login)
+// RUTE PUBLIK (Tidak butuh Token)
 // ==========================================
 router.post("/auth/login", authController.login);
+router.post("/auth/register", authController.register); // Tambahkan ini agar bisa buat user baru
 
 // ==========================================
-// RUTE TERPROTEKSI (Wajib Login via JWT Token)
+// RUTE TERPROTEKSI (Wajib Login & Opsional Admin)
 // ==========================================
-router.use(verifyToken);
 
-// --- 1. MANAJEMEN USERS (Kunci Mutlak: Hanya Admin) ---
-router.get("/users", requireAdmin, usersController.index);
-router.get("/users/:id", requireAdmin, usersController.show);
-router.post("/users", requireAdmin, usersController.store);
-router.put("/users/:id", requireAdmin, usersController.update);
-router.delete("/users/:id", requireAdmin, usersController.delete);
+// --- 1. MANAJEMEN USERS (Hanya Admin) ---
+router.get("/users", verifyToken, requireAdmin, usersController.index);
+router.get("/users/:id", verifyToken, requireAdmin, usersController.show);
+router.post("/users", verifyToken, requireAdmin, usersController.store);
+router.put("/users/:id", verifyToken, requireAdmin, usersController.update);
+router.delete("/users/:id", verifyToken, requireAdmin, usersController.delete);
 
 // --- 2. CUSTOMERS ---
-router.get("/customers", customerController.index);
-router.get("/customers/:id", customerController.show);
-router.post("/customers", customerController.store);
-router.put("/customers/:id", customerController.update);
-router.delete("/customers/:id", requireAdmin, customerController.destroy); // Hapus butuh Admin
+router.get("/customers", verifyToken, customerController.index);
+router.get("/customers/:id", verifyToken, customerController.show);
+router.post("/customers", verifyToken, customerController.store);
+router.put("/customers/:id", verifyToken, customerController.update);
+router.delete("/customers/:id", verifyToken, requireAdmin, customerController.destroy); 
 
 // --- 3. LEADS ---
-router.get("/leads", leadController.index);
-router.get("/leads/:id", leadController.show);
-router.post("/leads", leadController.store);
-router.put("/leads/:id", leadController.update);
-router.delete("/leads/:id", requireAdmin, leadController.destroy); // Hapus butuh Admin
+router.get("/leads", verifyToken, leadController.index);
+router.get("/leads/:id", verifyToken, leadController.show);
+router.post("/leads", verifyToken, leadController.store);
+router.put("/leads/:id", verifyToken, leadController.update);
+router.delete("/leads/:id", verifyToken, requireAdmin, leadController.destroy); 
 
 // --- 4. DEALS ---
-router.get("/deals", dealController.index);
-router.get("/deals/:id", dealController.show);
-router.post("/deals", dealController.store);
-router.put("/deals/:id", dealController.update);
-router.delete("/deals/:id", requireAdmin, dealController.destroy); // Hapus butuh Admin
+router.get("/deals", verifyToken, dealController.index);
+router.get("/deals/:id", verifyToken, dealController.show);
+router.post("/deals", verifyToken, dealController.store);
+router.put("/deals/:id", verifyToken, dealController.update);
+router.delete("/deals/:id", verifyToken, requireAdmin, dealController.destroy); 
 
 // --- 5. CONTACTS ---
-router.get("/contacts", contactsController.index);
-router.get("/contacts/:id", contactsController.show);
-router.post("/contacts", contactsController.store);
-router.put("/contacts/:id", contactsController.update);
-router.delete("/contacts/:id", requireAdmin, contactsController.destroy); // Hapus butuh Admin
+router.get("/contacts", verifyToken, contactsController.index);
+router.get("/contacts/:id", verifyToken, contactsController.show);
+router.post("/contacts", verifyToken, contactsController.store);
+router.put("/contacts/:id", verifyToken, contactsController.update);
+router.delete("/contacts/:id", verifyToken, requireAdmin, contactsController.destroy); 
 
 // --- 6. ACTIVITIES ---
-router.get("/activities", activitiesController.index);
-router.get("/activities/:id", activitiesController.show);
-router.post("/activities", activitiesController.store);
-router.put("/activities/:id", activitiesController.update);
-router.delete("/activities/:id", requireAdmin, activitiesController.destroy); // Hapus butuh Admin
+router.get("/activities", verifyToken, activitiesController.index);
+router.get("/activities/:id", verifyToken, activitiesController.show);
+router.post("/activities", verifyToken, activitiesController.store);
+router.put("/activities/:id", verifyToken, activitiesController.update);
+router.delete("/activities/:id", verifyToken, requireAdmin, activitiesController.destroy); 
 
 module.exports = router;

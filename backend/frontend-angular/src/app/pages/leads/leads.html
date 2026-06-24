@@ -1,0 +1,102 @@
+<div class="container-fluid px-4">
+    <h1 class="mt-4">Leads</h1>
+    <ol class="breadcrumb mb-4">
+        <li class="breadcrumb-item"><a routerLink="/dashboard">Dashboard</a></li>
+        <li class="breadcrumb-item active">Data Leads</li>
+    </ol>
+
+    @if (isLoading) {
+        <div class="d-flex justify-content-center" style="height: 200px;"><div class="spinner-border text-primary"></div></div>
+    } @else if (errorMessage) {
+        <div class="alert alert-danger">{{ errorMessage }}</div>
+    } @else {
+        <div class="card mb-4 shadow-sm">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <div><i class="fas fa-bullseye me-1"></i> Daftar Leads</div>
+                <button class="btn btn-sm btn-success" data-bs-toggle="modal" data-bs-target="#addLeadModal">
+                    <i class="fas fa-plus"></i> Tambah Lead
+                </button>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-striped table-bordered table-hover align-middle">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>ID</th><th>Nama</th><th>Email/Phone</th><th>Status</th><th class="text-center">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @for (item of leads; track item.id) {
+                                <tr>
+                                    <td>#{{ item.id }}</td>
+                                    <td><strong>{{ item.title }}</strong><br><small>Cust ID: {{ item.customer_id }}</small></td>
+                                    <td>{{ item.source }}</td>
+                                    <td><span class="badge bg-warning text-dark">{{ item.status }}</span></td>
+                                    <td class="text-center">
+                                        <button class="btn btn-sm btn-primary me-2" (click)="openEditModal(item)"><i class="fas fa-edit"></i></button>
+                                        <button class="btn btn-sm btn-danger" (click)="deleteLead(item.id, item.title)"><i class="fas fa-trash"></i></button>
+                                    </td>
+                                </tr>
+                            } @empty {
+                                <tr><td colspan="5" class="text-center py-4">Data kosong.</td></tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+<div class="modal fade" id="addLeadModal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header"><h5 class="modal-title">Tambah Lead</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+      <div class="modal-body">
+        <div class="mb-3"><label>ID Customer Terkait</label><input type="number" class="form-control" [(ngModel)]="newLead.customer_id"></div>
+        <div class="mb-3"><label>Judul Lead</label><input type="text" class="form-control" [(ngModel)]="newLead.title"></div>
+        <div class="mb-3"><label>Sumber (Source)</label><input type="text" class="form-control" [(ngModel)]="newLead.source"></div>
+        <div class="mb-3"><label>Catatan</label><textarea class="form-control" [(ngModel)]="newLead.notes" rows="2"></textarea></div>
+        <div class="mb-3">
+            <label>Status (Enum)</label>
+            <select class="form-select" [(ngModel)]="newLead.status">
+                <option value="New">New</option>
+                <option value="Contacted">Contacted</option>
+                <option value="Qualified">Qualified</option>
+                <option value="Lost">Lost</option>
+            </select>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+        <button class="btn btn-primary" (click)="saveLead()" [disabled]="isSaving">Simpan</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="editLeadModal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header"><h5 class="modal-title">Edit Lead</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+      <div class="modal-body">
+        <div class="mb-3"><label>ID Customer Terkait</label><input type="number" class="form-control" [(ngModel)]="newLead.customer_id"></div>
+            <div class="mb-3"><label>Judul Lead</label><input type="text" class="form-control" [(ngModel)]="newLead.title"></div>
+            <div class="mb-3"><label>Sumber (Source)</label><input type="text" class="form-control" [(ngModel)]="newLead.source"></div>
+            <div class="mb-3"><label>Catatan</label><textarea class="form-control" [(ngModel)]="newLead.notes" rows="2"></textarea></div>
+            <div class="mb-3">
+                <label>Status (Enum)</label>
+                <select class="form-select" [(ngModel)]="newLead.status">
+                    <option value="New">New</option>
+                    <option value="Contacted">Contacted</option>
+                    <option value="Qualified">Qualified</option>
+                    <option value="Lost">Lost</option>
+                </select>
+            </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+        <button class="btn btn-primary" (click)="saveEditLead()" [disabled]="isUpdating">Update</button>
+      </div>
+    </div>
+  </div>
+</div>

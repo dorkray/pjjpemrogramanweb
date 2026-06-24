@@ -6,12 +6,24 @@ class AuthController {
     async login(req, res, next) {
         try {
             const { email, password } = req.body;
+            console.log("Mencoba login dengan email:", email);
             const user = await UserModel.findByEmail(email);
+            console.log("User yang ditemukan dari DB:", user);
 
-            if (!user) return res.status(401).json({ success: false, message: 'Kredensial tidak valid' });
+            if (!user) {
+            console.log("User tidak ditemukan di DB!"); 
+            return res.status(401).json({ success: false, message: 'Kredensial tidak valid' });
+        }
 
+            console.log("Password yang dikirim dari form:", password);
+            console.log("Password dari database:", user.password);
+            // Tambahkan baris ini tepat sebelum bcrypt.compare
             const isMatch = await bcrypt.compare(password, user.password);
-            if (!isMatch) return res.status(401).json({ success: false, message: 'Kredensial tidak valid' });
+            console.log("Hasil perbandingan bcrypt:", isMatch);
+        if (!isMatch) {
+            console.log("Password salah!");
+            return res.status(401).json({ success: false, message: 'Kredensial tidak valid' });
+        }
 
             const token = jwt.sign(
                 { id: user.id, role: user.role }, 

@@ -1,0 +1,113 @@
+<div class="container-fluid px-4">
+    <h1 class="mt-4">Users</h1>
+    <ol class="breadcrumb mb-4">
+        <li class="breadcrumb-item"><a routerLink="/dashboard">Dashboard</a></li>
+        <li class="breadcrumb-item active">Data Users</li>
+    </ol>
+
+    @if (isLoading) {
+        <div class="d-flex justify-content-center" style="height: 200px;"><div class="spinner-border text-primary"></div></div>
+    } @else if (errorMessage) {
+        <div class="alert alert-danger">{{ errorMessage }}</div>
+    } @else {
+        <div class="card mb-4 shadow-sm">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <div><i class="fas fa-bullseye me-1"></i> Daftar Users</div>
+                <button class="btn btn-sm btn-success" data-bs-toggle="modal" data-bs-target="#addUserModal">
+                    <i class="fas fa-plus"></i> Tambah User
+                </button>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-striped table-bordered table-hover align-middle">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>ID</th>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Role</th>
+                                <th class="text-center">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @for (item of users; track item.id) {
+                                <tr>
+                                    <td>#{{ item.id }}</td>
+                                    <td><strong>{{ item.name }}</strong></td>
+                                    <td>{{ item.email }}</td>
+                                    <td>
+                                        @if(item.role === 'admin') { <span class="badge bg-danger">Admin</span> }
+                                        @else if(item.role === 'sales') { <span class="badge bg-success">Sales</span> }
+                                        @else { <span class="badge bg-secondary">Staff</span> }
+                                    </td>
+                                    <td class="text-center">
+                                        <button class="btn btn-sm btn-primary me-2" (click)="openEditModal(item)"><i class="fas fa-edit"></i></button>
+                                        <button class="btn btn-sm btn-danger" (click)="deleteUser(item.id, item.name)"><i class="fas fa-trash"></i></button>
+                                    </td>
+                                </tr>
+                            } @empty {
+                                <tr><td colspan="5" class="text-center py-4">Data kosong.</td></tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+<div class="modal fade" id="addUserModal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header"><h5 class="modal-title">Tambah User</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+      <div class="modal-body">
+        <div class="mb-3"><label>Nama Lengkap</label><input type="text" class="form-control" [(ngModel)]="newUser.name"></div>
+        <div class="mb-3"><label>Email Login</label><input type="email" class="form-control" [(ngModel)]="newUser.email"></div>
+        <div class="mb-3">
+            <label>Password</label>
+            <input type="password" class="form-control" [(ngModel)]="newUser.password" placeholder="Kosongkan saat edit jika tidak diubah">
+        </div>
+        <div class="mb-3">
+            <label>Role / Akses (Enum)</label>
+            <select class="form-select" [(ngModel)]="newUser.role">
+                <option value="admin">Admin</option>
+                <option value="sales">Sales</option>
+                <option value="staff">Staff</option>
+            </select>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+        <button class="btn btn-primary" (click)="saveUser()" [disabled]="isSaving">Simpan</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="editUserModal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header"><h5 class="modal-title">Edit User</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+      <div class="modal-body">
+        <div class="mb-3"><label>Nama Lengkap</label><input type="text" class="form-control" [(ngModel)]="newUser.name"></div>
+        <div class="mb-3"><label>Email Login</label><input type="email" class="form-control" [(ngModel)]="newUser.email"></div>
+        <div class="mb-3">
+            <label>Password</label>
+            <input type="password" class="form-control" [(ngModel)]="newUser.password" placeholder="Kosongkan saat edit jika tidak diubah">
+        </div>
+        <div class="mb-3">
+            <label>Role / Akses (Enum)</label>
+            <select class="form-select" [(ngModel)]="newUser.role">
+                <option value="admin">Admin</option>
+                <option value="sales">Sales</option>
+                <option value="staff">Staff</option>
+            </select>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+        <button class="btn btn-primary" (click)="saveEditUser()" [disabled]="isUpdating">Update</button>
+      </div>
+    </div>
+  </div>
+</div>
