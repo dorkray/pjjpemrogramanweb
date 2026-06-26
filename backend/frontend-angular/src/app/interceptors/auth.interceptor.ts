@@ -1,13 +1,13 @@
 import { HttpInterceptorFn, HttpErrorResponse } from '@angular/common/http';
 import { isPlatformBrowser } from '@angular/common';
 import { inject, PLATFORM_ID } from '@angular/core';
-import { Router } from '@angular/router'; // 1. Import Router
-import { catchError } from 'rxjs/operators'; // 2. Import catchError
-import { throwError } from 'rxjs'; // 3. Import throwError
+import { Router } from '@angular/router'; 
+import { catchError } from 'rxjs/operators'; 
+import { throwError } from 'rxjs'; 
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const platformId = inject(PLATFORM_ID);
-  const router = inject(Router); // Inject router agar bisa pindah halaman
+  const router = inject(Router); 
   
   if (isPlatformBrowser(platformId)) {
     const token = localStorage.getItem('token');
@@ -18,19 +18,23 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
     }
   }
 
-  // 4. Tangani Response dari Backend
+  // Tangani Response dari Backend
   return next(req).pipe(
     catchError((error: HttpErrorResponse) => {
       // 1. Jika Token Basi / Ditolak Server
       if (error.status === 401) {
         if (isPlatformBrowser(platformId)) {
           localStorage.removeItem('token');
+          // AMAN: Gunakan router bawaan Angular, bukan window.location!
+          router.navigate(['/auth/login']); 
         }
-        window.location.href = '/auth/login'; // Hard reload ke login
       } 
       // 2. JIKA SERVER MATI / KONEKSI TERPUTUS
       else if (error.status === 0) {
-        alert("Koneksi ke Server terputus! Pastikan backend sedang berjalan.");
+        if (isPlatformBrowser(platformId)) {
+          // AMAN: alert hanya akan dipanggil jika ini benar-benar di layar browser
+          alert("Koneksi ke Server terputus! Pastikan backend sedang berjalan.");
+        }
       }
 
       return throwError(() => error);
