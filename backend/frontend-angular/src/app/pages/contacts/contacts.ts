@@ -162,6 +162,13 @@ export class Contacts implements OnInit {
     });
   }
 
+// Fungsi penerjemah ID Customer menjadi Nama Customer
+  getCustomerName(id: any): string {
+    if (!this.customersList || !id) return '-';
+    const found = this.customersList.find((c: any) => c.id == id);
+    return found ? found.name : 'Unknown';
+  }
+
   closeModal(modalId: string) {
     const modalElement = document.getElementById(modalId);
     if (modalElement) {

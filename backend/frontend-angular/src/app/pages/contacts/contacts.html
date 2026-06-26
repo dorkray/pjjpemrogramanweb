@@ -38,7 +38,7 @@
                             @for (item of contacts; track item.id) {
                                 <tr>
                                     <td>{{ item.id }}</td>
-                                    <td>{{ item.customer_id }}</td>
+                                    <td>{{ getCustomerName(item.customer_id) }}</td>
                                     <td><strong>{{ item.name }}</strong></td>
                                     <td>{{ item.email }}</td>
                                     <td>{{ item.phone }}</td>
@@ -46,10 +46,10 @@
                                     <td>{{ item.created_at | date:'dd/MM/yyyy' }}</td>
                                     <td class="text-center">
                                         @if (userRole === 'admin' || userRole === 'sales') {
-                                        <button class="btn btn-sm btn-primary me-2" (click)="openEditModal(item)"><i class="fas fa-edit"></i></button>
+                                        <button class="btn btn-sm btn-warning me-2" (click)="openEditModal(item)"><i class="fas fa-edit"></i>Edit</button>
                                         }
                                         @if (userRole === 'admin') {
-                                        <button class="btn btn-sm btn-danger" (click)="deleteContact(item.id, item.name)"><i class="fas fa-trash"></i></button>
+                                        <button class="btn btn-sm btn-danger" (click)="deleteContact(item.id, item.name)"><i class="fas fa-trash"></i>Hapus</button>
                                         }
                                     </td>
                                 </tr>

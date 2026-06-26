@@ -12,6 +12,7 @@ import Swal from 'sweetalert2';
 })
 export class Customers implements OnInit {
   customers: any[] = [];
+  usersList: any[] = [];
   isLoading: boolean = true; 
   errorMessage: string = ''; 
 
@@ -30,6 +31,7 @@ export class Customers implements OnInit {
     if (isPlatformBrowser(this.platformId)) {
       // Jika di browser, ambil data dari backend
       this.loadCustomers();
+      this.loadUsersList();
     } else {
       // Jika di server, biarkan saja (jangan panggil API agar tidak error 401 di terminal)
       this.isLoading = false; 
@@ -52,6 +54,19 @@ export class Customers implements OnInit {
         this.isLoading = false;
         this.cdr.detectChanges();
       }
+    });
+  }
+
+  // Fungsi untuk menarik data Users dari API
+  loadUsersList() {
+    this.api.getUsers().subscribe({
+      next: (res: any) => {
+        this.usersList = Array.isArray(res) ? res : (res.data || []);
+        
+        // Bangunkan Angular dan suruh gambar ulang tabel setelah nama-nama User didapatkan!
+        this.cdr.detectChanges(); 
+      },
+      error: (err) => console.error('Gagal memuat daftar user', err)
     });
   }
 
@@ -197,6 +212,13 @@ export class Customers implements OnInit {
         });
       }
     });
+  }
+
+// Fungsi penerjemah ID User menjadi Nama User
+  getUserName(id: any): string {
+    if (!this.usersList || !id) return '-';
+    const found = this.usersList.find((u: any) => u.id == id);
+    return found ? found.name : 'Unknown';
   }
 
   closeModal(modalId: string) {

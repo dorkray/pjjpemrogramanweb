@@ -136,6 +136,14 @@ export class Deals implements OnInit {
     });
   }
 
+// Fungsi penerjemah ID Lead menjadi Judul/Nama Lead
+  getLeadName(id: any): string {
+    if (!this.leadsList || !id) return '-';
+    // Sesuaikan found.title dengan nama field di tabel Leads Anda (bisa found.name atau found.title)
+    const found = this.leadsList.find((l: any) => l.id == id);
+    return found ? found.title : 'Unknown'; 
+  }
+
   // Helper penutup modal
   closeModal(modalId: string) {
     const modalElement = document.getElementById(modalId);

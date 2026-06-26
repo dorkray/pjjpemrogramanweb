@@ -13,6 +13,7 @@ import Swal from 'sweetalert2';
 export class Activities implements OnInit {
   activities: any[] = [];
   customersList: any[] = [];
+  usersList: any[] = [];
   isLoading: boolean = true;
   errorMessage: string = '';
 
@@ -34,6 +35,7 @@ export class Activities implements OnInit {
     if (isPlatformBrowser(this.platformId)) {
       this.loadActivities();
       this.loadCustomersList();
+      this.loadUsersList();
     } else {
       this.isLoading = false;
     }
@@ -84,6 +86,16 @@ export class Activities implements OnInit {
         this.isLoading = false;
         this.cdr.detectChanges();
       }
+    });
+  }
+
+// Fungsi untuk menarik data Users dari API
+  loadUsersList() {
+    this.api.getUsers().subscribe({
+      next: (res: any) => {
+        this.usersList = Array.isArray(res) ? res : (res.data || []);
+      },
+      error: (err) => console.error('Gagal memuat daftar user', err)
     });
   }
 
@@ -209,6 +221,20 @@ export class Activities implements OnInit {
       console.error(`GAWAT! Modal dengan id="${modalId}" tidak ditemukan di HTML!`);
       alert(`Error: ID Modal "${modalId}" tidak ada di file HTML Anda.`);
     }
+  }
+
+// Fungsi penerjemah ID User menjadi Nama User
+  getUserName(id: any): string {
+    if (!this.usersList || !id) return '-';
+    const found = this.usersList.find((u: any) => u.id == id);
+    return found ? found.name : 'Unknown';
+  }
+
+// Fungsi penerjemah ID Customer menjadi Nama Customer
+  getCustomerName(id: any): string {
+    if (!this.customersList || !id) return '-';
+    const found = this.customersList.find((c: any) => c.id == id);
+    return found ? found.name : 'Unknown';
   }
 
   // Helper penutup modal

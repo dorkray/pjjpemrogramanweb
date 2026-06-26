@@ -39,19 +39,19 @@
                             @for (item of leads; track item.id) {
                                 <tr>
                                     <td>{{ item.id }}</td>
-                                    <td>{{ item.customer_id }}</td>
+                                    <td>{{ getCustomerName(item.customer_id) }}</td>
                                     <td><strong>{{ item.title }}</strong></td>
                                     <td>{{ item.source }}</td>
                                     <td>{{ item.notes }}</td>
                                     <td><span class="badge bg-warning text-dark">{{ item.status }}</span></td>
-                                    <td>{{ item.assigned_to }}</td>
+                                    <td>{{ getUserName(item.assigned_to) }}</td>
                                     <td>{{ item.created_at | date:'dd/MM/yyyy' }}</td>
                                     <td class="text-center">
                                         @if (userRole === 'admin' || userRole === 'sales') {
-                                        <button class="btn btn-sm btn-primary me-2" (click)="openEditModal(item)"><i class="fas fa-edit"></i></button>
+                                        <button class="btn btn-sm btn-warning me-2" (click)="openEditModal(item)"><i class="fas fa-edit"></i>Edit</button>
                                         }
                                         @if (userRole === 'admin') {
-                                        <button class="btn btn-sm btn-danger" (click)="deleteLead(item.id, item.title)"><i class="fas fa-trash"></i></button>
+                                        <button class="btn btn-sm btn-danger" (click)="deleteLead(item.id, item.title)"><i class="fas fa-trash"></i>Hapus</button>
                                         }
                                     </td>
                                 </tr>

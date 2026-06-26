@@ -37,21 +37,21 @@
                             @for (item of activities; track item.id) {
                                 <tr>
                                     <td>{{ item.id }}</td>
-                                    <td>{{ item.customer_id }}</td>
+                                    <td>{{ getCustomerName(item.customer_id) }}</td>
                                     <td><span class="badge bg-secondary">{{ item.type }}</span></td>
                                     <td>{{ item.description }}</td>
                                     <td>{{ item.activity_date | date:'dd/MM/yyyy HH:mm' }}</td>
-                                    <td>{{ item.created_by }}</td>
+                                    <td>{{ getUserName(item.created_by) }}</td>
                                     <td class="text-center">
                                         @if (userRole === 'admin' || userRole === 'sales') {
                                             <button class="btn btn-sm btn-warning me-2" (click)="openEditModal(item)">
-                                                <i class="fas fa-edit"></i> Edit
+                                                <i class="fas fa-edit"></i>Edit
                                             </button>
                                         }
 
                                         @if (userRole === 'admin') {
                                             <button class="btn btn-sm btn-danger" (click)="deleteActivity(item.id, item.description)">
-                                                <i class="fas fa-trash"></i> Hapus
+                                                <i class="fas fa-trash"></i>Hapus
                                             </button>
                                         }
                                     </td>

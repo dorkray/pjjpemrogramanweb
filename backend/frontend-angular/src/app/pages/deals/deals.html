@@ -38,17 +38,17 @@
                             @for (item of deals; track item.id) {
                                 <tr>
                                     <td>{{ item.id }}</td>
-                                    <td>{{ item.lead_id }}</td>
+                                    <td>{{ getLeadName(item.lead_id) }}</td>
                                     <td><strong>{{ item.title }}</strong></td>
                                     <td>{{ item.value | number:'1.0-2' }}</td> <td><span class="badge bg-success">{{ item.stage }}</span></td>
                                     <td>{{ item.closed_at | date:'dd/MM/yyyy' }}</td>
                                     <td>{{ item.created_at | date:'dd/MM/yyyy' }}</td>
                                     <td class="text-center">
                                         @if (userRole === 'admin' || userRole === 'sales') {
-                                        <button class="btn btn-sm btn-primary me-2" (click)="openEditModal(item)"><i class="fas fa-edit"></i></button>
+                                        <button class="btn btn-sm btn-warning me-2" (click)="openEditModal(item)"><i class="fas fa-edit"></i>Edit</button>
                                         }
                                         @if (userRole === 'admin') {
-                                        <button class="btn btn-sm btn-danger" (click)="deleteDeal(item.id, item.title)"><i class="fas fa-trash"></i></button>
+                                        <button class="btn btn-sm btn-danger" (click)="deleteDeal(item.id, item.title)"><i class="fas fa-trash"></i>Hapus</button>
                                         }
                                     </td>
                                 </tr>

@@ -184,6 +184,20 @@ export class Leads implements OnInit {
     });
   }
 
+// Fungsi penerjemah ID User menjadi Nama User
+  getUserName(id: any): string {
+    if (!this.usersList || !id) return '-';
+    const found = this.usersList.find((u: any) => u.id == id);
+    return found ? found.name : 'Unknown';
+  }
+
+// Fungsi penerjemah ID Customer menjadi Nama Customer
+  getCustomerName(id: any): string {
+    if (!this.customersList || !id) return '-';
+    const found = this.customersList.find((c: any) => c.id == id);
+    return found ? found.name : 'Unknown';
+  }
+
   // Helper penutup modal
   closeModal(modalId: string) {
     const modalElement = document.getElementById(modalId);
